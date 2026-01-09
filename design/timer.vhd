@@ -18,18 +18,26 @@ end entity timer ;
 
 architecture rtl of timer is
   signal count :  unsigned(10 DOWNTO 0) := (OTHERS => '0');
+  signal period_ns_c  : natural := 1_000_000_000 / clk_freq_hz_g;
+  signal max_count_c  : natural := natural(real(delay_g / 1 ns) / real(period_ns_c));
 begin
-  count: process(clk_i, arst_i)
+  counting: process(clk_i, arst_i)
   begin
     if arst_i = '1' then
       count    <= (OTHERS => '0');
-      done_o   <= '0';
+      done_o   <= '1';
     elsif rising_edge(clk_i) then
-      if count = max_count-1 then
-        count <= (OTHERS => '0');
-      else
-        count <= count + 1;
-      end if;
+      if done_o = '1' and start_i = '1' then  
+        count  <= to_unsigned(0, count'length);  
+        done_o <= '0';                           
+      elsif done_o = '0' then  
+        if count = max_count_c - 1 then
+          count  <= (others => '0');
+          done_o <= '1';  
+        else
+          count <= count + 1;
+        end if;
+      end if;  
     end if;
   end process;
 end architecture;
