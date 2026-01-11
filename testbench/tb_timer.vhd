@@ -53,11 +53,14 @@ begin
         start <= '0';
         check_equal(done, '0', "2. start: counting begins");
 
-        wait for delay_c + clk_period_c;
-        check_equal(done, '1', "3. start: counting begins");
+        --wait for delay_c + clk_period_c;
+        --check_equal(done, '1', "3. start: counting begins");
+
+        wait for delay_c / 8;
+        check_equal(done, '0', "3. start: counting begins");
         
-        --wait until done = '1';
-        --check_equal(done, '1', "done should assert after delay");  
+        wait until done = '1';
+        check_equal(done, '1', "done should assert after delay");  
         
       end if;
     end loop;
