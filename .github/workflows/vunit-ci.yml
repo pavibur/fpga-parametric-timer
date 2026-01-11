@@ -22,14 +22,14 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y llvm-14-runtime libllvm14
+        cd /tmp
         wget https://github.com/ghdl/ghdl/releases/download/v4.1.0/ghdl-gha-ubuntu-22.04-llvm.tgz
         sudo tar -xzf ghdl-gha-ubuntu-22.04-llvm.tgz
-        sudo mkdir -p /opt/bin /opt/ghdl/binl
+        sudo mkdir -p /opt/bin
         sudo cp ghdl ghdl1-llvm ghwdump /opt/bin/
-        sudo cp ghdl1-llvm ghwdump /opt/ghdl/bin/
-        sudo chmod +x /opt/bin/ghdl* /opt/ghdl/bin/ghdl*    
+        sudo chmod +x /opt/bin/ghdl*
         sudo ln -sf /opt/bin/ghdl1-llvm /usr/local/bin/ghdl
-        export PATH="/opt/bin:/opt/ghdl/bin:$PATH"
+        export PATH="/opt/bin:$PATH"
         ghdl --version
         pip install vunit_hdl
         
