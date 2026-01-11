@@ -21,7 +21,7 @@ jobs:
     - name: Install GHDL LLVM
       run: |
         sudo apt update
-        sudo apt install -y llvm-14-runtime libllvm14
+        sudo apt install -y llvm-14-runtime libllvm14 llvm-14 gnat-10 libgnat-10 libc6-dev
         cd /tmp/
         wget https://github.com/ghdl/ghdl/releases/download/v4.1.0/ghdl-gha-ubuntu-22.04-llvm.tgz
         sudo tar -xzf ghdl-gha-ubuntu-22.04-llvm.tgz -C /opt/
