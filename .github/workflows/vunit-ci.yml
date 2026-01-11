@@ -32,6 +32,8 @@ jobs:
         
     - name: Verify & Run
       run: |
+        export PATH="/opt/bin:$PATH:/opt:$PATH"
+        hash -r
         ghdl --version
         python run.py
         
