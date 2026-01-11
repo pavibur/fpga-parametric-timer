@@ -1,13 +1,14 @@
 from vunit import VUnit
+import random
 
 vu = VUnit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 
 lib = vu.add_library("design_lib")
-lib.add_source_files("./design/*.vhd")
+lib.add_source_files("./design/timer.vhd")
 
 tb_lib = vu.add_library("tb_lib")
-tb_lib.add_source_files("./testbench/*.vhd")
+tb_lib.add_source_files("./testbench/tb_timer.vhd")
 
 tb = tb_lib.test_bench("tb_timer")
 
@@ -42,5 +43,20 @@ tb.add_config(
         "tb_delay_g": 2600
     },
 )
+
+
+# Generate random configs
+random.seed(42) 
+for i in range(10):
+    tb_clk_freq = random.randint(5, 50)   
+    tb_delay_ms = random.randint(100, 3000) 
+    
+    tb.add_config(
+        name=f"rand_{i}_f{tb_clk_freq}Hz_d{tb_delay_ms}ms",
+        generics={
+            "tb_clk_freq_g": tb_clk_freq,
+            "tb_delay_g": tb_delay_ms
+        }
+    )
 
 vu.main()
