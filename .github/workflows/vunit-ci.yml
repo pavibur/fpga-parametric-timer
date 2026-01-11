@@ -1,0 +1,35 @@
+name: VUnit Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y ghdl-mcode python3-pip
+        pip install vunit_hdl
+        
+    - name: Run VUnit Tests
+      run: python run.py
+      
+    - name: Upload Results (failures)
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: vunit-logs
+        path: vunit_out/test_output/
