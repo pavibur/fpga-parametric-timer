@@ -21,12 +21,17 @@ jobs:
     - name: Install GHDL LLVM
       run: |
         sudo apt update
-        sudo apt install -y ghdl llvm-dev clang  # LLVM variant
+        sudo apt install -y llvm-14-runtime libllvm14
+        wget https://github.com/ghdl/ghdl/releases/download/v4.1.0/ghdl-gha-ubuntu-22.04-llvm.tgz
+        sudo tar -xzf ghdl-gha-ubuntu-22.04-llvm.tgz -C /opt/
+        sudo ln -sf /opt/ghdl/bin/ghdl1-llvm /usr/local/bin/ghdl
+        export PATH="/opt/ghdl/bin:$PATH"
+        ghdl --version
         pip install vunit_hdl
         
     - name: Verify & Run
       run: |
-        ghdl --version  # Should show "llvm code generator"
+        ghdl --version
         python run.py
         
     - name: Artifacts (failures only)
