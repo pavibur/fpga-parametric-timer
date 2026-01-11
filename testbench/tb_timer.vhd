@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
+use ieee.math_real.all;
 
 
 library vunit_lib;
@@ -20,13 +20,15 @@ end entity;
 architecture tb of tb_timer is
   signal clk, reset_n, done, start : std_logic := '0';
 
-  signal clk_period_c  : time    := (1_000_000_000 / tb_clk_freq_g) * 1 ns;
+  constant clk_period_c : time := (1_000_000_000 / tb_clk_freq_g) * 1 ns;
+  signal clk_freq_hz_g_in : natural := tb_clk_freq_g;
+
   signal delay_c : time := tb_delay_g * 1 ms;
 
 begin
   dut: entity design_lib.timer(rtl)
     generic map(
-      clk_freq_hz_g => 10,
+      clk_freq_hz_g => clk_freq_hz_g_in,
       delay_g       => delay_c
     )
     port map (
