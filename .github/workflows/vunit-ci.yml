@@ -18,18 +18,20 @@ jobs:
       with:
         python-version: '3.10'
         
-    - name: Install dependencies
+    - name: Install GHDL LLVM
       run: |
         sudo apt update
-        sudo apt install -y ghdl-mcode python3-pip
+        sudo apt install -y ghdl llvm-dev clang  # LLVM variant
         pip install vunit_hdl
         
-    - name: Run VUnit Tests
-      run: python run.py
-      
-    - name: Upload Results (failures)
+    - name: Verify & Run
+      run: |
+        ghdl --version  # Should show "llvm code generator"
+        python run.py
+        
+    - name: Artifacts (failures only)
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: vunit-logs
-        path: vunit_out/test_output/
+        name: vunit-debug
+        path: vunit_out/
