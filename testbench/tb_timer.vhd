@@ -2,6 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+
+
 library vunit_lib;
 context vunit_lib.vunit_context;
 
@@ -39,17 +41,23 @@ begin
   main: process
   begin
     test_runner_setup(runner, runner_cfg);  
+
     while test_suite loop
       if run("test_timer_basic") then
         
         reset_n <= '1'; wait for 2 * clk_period_c;  
         reset_n <= '0'; wait for clk_period_c / 4;
+        check_equal(done, '1', "1. idle: done=1");
         
         start <= '1'; wait for clk_period_c;
         start <= '0';
+        check_equal(done, '0', "2. start: counting begins");
+
+        wait for delay_c + clk_period_c;
+        check_equal(done, '1', "3. start: counting begins");
         
-        wait until done = '1';
-        check_equal(done, '1', "done should assert after delay");  
+        --wait until done = '1';
+        --check_equal(done, '1', "done should assert after delay");  
         
       end if;
     end loop;
